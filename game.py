@@ -20,7 +20,7 @@ class Jeu:
 
     def ship_shoot(self):
         if pyxel.btn(pyxel.KEY_SPACE) :
-            self.bullet_x = self.vaisseau_x+4
+            self.bullet_x = self.vaisseau_x+3
             self.bullet_y = self.vaisseau_y
 
     def bullet_move(self):

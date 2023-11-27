@@ -1,4 +1,6 @@
 import pyxel
+import time
+import random
 
 class Jeu:
     def __init__(self):
@@ -15,18 +17,19 @@ class Jeu:
         self.vaisseau_y = self.height -8
         self.bullet_x = None
         self.bullet_y = None
+        self.alien_list = [[random.randrange(5,123), random.randrange(5,100)]]
 
         pyxel.run(self.update, self.draw)
 
     def ship_shoot(self):
-        if pyxel.btn(pyxel.KEY_SPACE) :
+        if pyxel.btn(pyxel.KEY_SPACE) and self.bullet_x == None:
             self.bullet_x = self.vaisseau_x+3
             self.bullet_y = self.vaisseau_y
 
     def bullet_move(self):
         if self.bullet_x is not None :
             print(self.bullet_y)
-            self.bullet_y -= 1
+            self.bullet_y -= 3
             if self.bullet_y < -4 :
               self.bullet_x = None
               self.bullet_y = None
@@ -38,6 +41,13 @@ class Jeu:
             self.vaisseau_x += 2
         if pyxel.btn(pyxel.KEY_LEFT) and self.vaisseau_x>0:
             self.vaisseau_x += -2
+    
+    def alien_move(self) :
+        for coordinate in self.alien_list  :
+            coordinate[0] += 10
+            
+            coordinate[0] -= 10
+
 
 
     # =====================================================
@@ -50,7 +60,7 @@ class Jeu:
         self.vaisseau_deplacement()
         self.bullet_move()
         self.ship_shoot()
-
+        self.alien_move()
 
     # =====================================================
     # == DRAW
@@ -67,5 +77,8 @@ class Jeu:
         # bullet 
         if self.bullet_x is not None :
             pyxel.rect(self.bullet_x, self.bullet_y, 2, 4, 7)
+        # alien
+        for coordinate in self.alien_list :
+            pyxel.rect(coordinate[0], coordinate[1], 2, 2, 8)
 
 Jeu()

@@ -9,7 +9,8 @@ class Jeu:
         # ne pas modifier
         self.width = 224
         self.height = 256
-        self.vaisseau = Vaisseau(self) # je passe le jeu au vaisseau 
+        self.vaisseau = Vaisseau(self, Alien) # je passe le jeu au vaisseau 
+        self.alien = Alien(self, Vaisseau)
         self.aliens = []
         pyxel.init(self.width, self.height, title="Space Invader", fps=60)
         pyxel.run(self.update, self.draw)
@@ -33,6 +34,8 @@ class Jeu:
         self.vaisseau.vaisseau_deplacement()
         self.vaisseau.bullet_move()
         self.vaisseau.ship_shoot()
+        self.alien.alien_move()
+
         
 
     # =====================================================
@@ -50,9 +53,13 @@ class Jeu:
         # bullet 
         self.vaisseau.bullet_draw()
 
+        #alien
+        self.alien.alien_draw()
+
 class Vaisseau:
-    def __init__(self, jeu) :
+    def __init__(self, jeu, alien) :
         self.jeu = jeu
+        self.alien = alien
         # position initiale du vaisseau
         self.vaisseau_x = self.jeu.width//2
         self.vaisseau_y = self.jeu.height - 32 
@@ -85,6 +92,11 @@ class Vaisseau:
       if self.bullet_x is not None :
         pyxel.rect(self.bullet_x, self.bullet_y, 2, 4, 7)
     
+    def bullet_hit(self):
+        if self.bullet_x == self.alien.x and self.bullet_y == self.alien.y :
+            self.alien.alien_destroyed = True
+    
+    
     def draw(self):
         # vaisseau (carre 8x8)
         pyxel.rect(self.vaisseau_x, self.vaisseau_y, 8, 8, 7)
@@ -96,7 +108,32 @@ class Vaisseau:
         self.ship_shoot()
 
 class Alien:
-    def __init__(self):
+    def __init__(self, jeu, vaisseau):
+        self.jeu = jeu
+        self.vaisseau = vaisseau
         self.x = 0
         self.y = 0
+        self.deathx = 0
+        self.deathy = 0
+        self.alien_destroyed = False
+
+    def alien_draw(self):
+        for g in range(20,170,30) :
+            for i in range(20,240,30) :
+                self.x += i
+                self.y += g
+                if self.alien_destroyed == False :
+                    pyxel.rect(self.x, self.y, 8, 8, 8)
+
+    def alien_move(self):
+        if pyxel.frame_count%15 == 0 :
+            if self.x > 0 :
+                self.x -= 8
+            elif self.x < self.jeu.width-8 :
+                self.x += 8
+
+        
+
+
+    
 Jeu()

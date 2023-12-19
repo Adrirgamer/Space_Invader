@@ -31,6 +31,9 @@ class Jeu:
             posy += 10 
         print(matrix)
         return matrix
+    def do_object_overlap(obj1, obj2)
+        l1 = obj1.x
+        r1 =         
 
     def do_overlap(l1, r1, l2, r2):
      
@@ -79,6 +82,15 @@ class Jeu:
 
         #alien
         self.alien.alien_draw()
+
+
+
+class Geometry(self):
+    def __init__(self):
+        self.x
+        self.y
+        
+            
 
 class Vaisseau:
     def __init__(self, jeu, alien) :

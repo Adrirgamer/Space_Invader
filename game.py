@@ -10,19 +10,43 @@ class Jeu:
         self.width = 224
         self.height = 256
         self.vaisseau = Vaisseau(self, Alien) # je passe le jeu au vaisseau 
-        self.alien = Alien(self, Vaisseau)
-        self.aliens = []
+        self.alien = Alien(self)
         pyxel.init(self.width, self.height, title="Space Invader", fps=60)
         pyxel.run(self.update, self.draw)
-        self.create_aliens()
+        self.aliens = self.create_aliens()
 
-    #def create_aliens(self):
-    #    x = 20
-    #   y = 20
-    #   for i in range(6):
-    #        for j in range(6): 
-    #            alien = 
-            
+
+    def create_aliens(self):
+        matrix =[]
+        posy = 0
+        for i in range(5):
+            line = []
+            posx = 0
+            for j in range(11):
+                new_alien = Alien(self)
+                new_alien.x = posx
+                posx += 10
+                line.append(new_alien)   
+            matrix.append(line)   
+            posy += 10 
+        print(matrix)
+        return matrix
+
+    def do_overlap(l1, r1, l2, r2):
+     
+     # if rectangle has area 0, no overlap
+        if l1[0] == r1[0] or l1[1] == r1[1] or r2[0] == l2[0] or l2[1] == r2[1]:
+            return False
+     
+        # If one rectangle is on left side of other
+        if l1[0] > r2[0] or l2[0] > r1[0]:
+            return False
+ 
+        # If one rectangle is above other
+        if r1[1] > l2[1] or r2[1] > l1[1]:
+            return False
+ 
+        return True
 
     # =====================================================
     # == UPDATE
@@ -93,8 +117,7 @@ class Vaisseau:
         pyxel.rect(self.bullet_x, self.bullet_y, 2, 4, 7)
     
     def bullet_hit(self):
-        if self.bullet_x == self.alien.x and self.bullet_y == self.alien.y :
-            self.alien.alien_destroyed = True
+        pass
     
     
     def draw(self):
@@ -108,9 +131,8 @@ class Vaisseau:
         self.ship_shoot()
 
 class Alien:
-    def __init__(self, jeu, vaisseau):
+    def __init__(self, jeu):
         self.jeu = jeu
-        self.vaisseau = vaisseau
         self.x = 0
         self.y = 0
         self.deathx = 0
@@ -120,10 +142,8 @@ class Alien:
     def alien_draw(self):
         for g in range(20,170,30) :
             for i in range(20,240,30) :
-                self.x += i
-                self.y += g
                 if self.alien_destroyed == False :
-                    pyxel.rect(self.x, self.y, 8, 8, 8)
+                    pyxel.rect(self.x + i, self.y + g, 8, 8, 8)
 
     def alien_move(self):
         if pyxel.frame_count%15 == 0 :
@@ -136,4 +156,4 @@ class Alien:
 
 
     
-Jeu()
+jeu = Jeu() 
